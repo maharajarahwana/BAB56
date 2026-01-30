@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>BAB56</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>BAB1</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Latihan Kosakata</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .card {
+    background: white;
+    padding: 30px;
+    width: 400px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  input {
+    width: 90%;
+    padding: 8px;
+    margin-top: 15px;
+  }
+  button {
+    margin-top: 20px;
+    padding: 8px 15px;
+    cursor: pointer;
+  }
+  .result {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .wrong { color: red; }
+  .correct { color: green; }
+  ol { text-align:left; max-height:400px; overflow:auto; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2 id="question"></h2>
+  <input type="text" id="answerInput" placeholder="Tulis jawaban di sini">
+  <br>
+  <button id="nextBtn">Selanjutnya</button>
+</div>
+
+<script>
+let questions = [
+{ soal: "산업 재해", jawaban: "kecelakaan kerja" },
+{ soal: "베다", jawaban: "terpotong" },
+{ soal: "응급 처치", jawaban: "pertolongan pertama" },
+{ soal: "불꽃이", jawaban: "percikan api" },
+{ soal: "뻔하다", jawaban: "hampir" },
+{ soal: "놀라다", jawaban: "kaget" },
+{ soal: "자마자", jawaban: "setelah" },
+{ soal: "다행이다", jawaban: "beruntung" },
+{ soal: "소방 장비", jawaban: "peralatan pemadam kebakaran" },
+{ soal: "사고", jawaban: "kecelakaan" },
+{ soal: "응급 상황", jawaban: "keadaan darurat" },
+{ soal: "관리감독자", jawaban: "pengawas manajemen" },
+{ soal: "대처", jawaban: "penanganan" },
+{ soal: "상급자", jawaban: "senior / atasan" },
+{ soal: "요령", jawaban: "tips" },
+{ soal: "보호하다", jawaban: "melindungi" },
+{ soal: "신고하다", jawaban: "melapor" },
+{ soal: "소화기", jawaban: "tabung pemadam (APAR)" },
+{ soal: "현장 보존", jawaban: "pelestarian lokasi kejadian" },
+{ soal: "소방 호스림(소화전)", jawaban: "gulungan selang damkar (hidran kebakaran)" },
+{ soal: "조사", jawaban: "survei / penyelidikan" },
+{ soal: "소방 사다리", jawaban: "tangga damkar" },
+{ soal: "외치다", jawaban: "berteriak" },
+{ soal: "화재 경보기", jawaban: "alarm kebakaran" },
+{ soal: "비상 전화", jawaban: "telepon darurat" },
+{ soal: "진화하다", jawaban: "memadamkan" },
+{ soal: "방화문", jawaban: "pintu tahan api" },
+{ soal: "강연자", jawaban: "pembicara" },
+{ soal: "초기", jawaban: "awal" },
+{ soal: "그대로", jawaban: "seperti itu" },
+{ soal: "대응", jawaban: "bereaksi / penanganan" },
+{ soal: "일손이 부족해요", jawaban: "kekurangan pekerja / staf" },
+{ soal: "감전", jawaban: "kesetrum" },
+{ soal: "자동 심장 박동기", jawaban: "alat pacu jantung otomatis (AED)" },
+{ soal: "질식", jawaban: "sesak napas" },
+{ soal: "화재", jawaban: "kebakaran" },
+{ soal: "들것", jawaban: "tandu" },
+{ soal: "무너짐", jawaban: "ambruk / runtuh" },
+{ soal: "음료수", jawaban: "minuman kaleng" },
+{ soal: "중지 / 정지", jawaban: "menghentikan" },
+{ soal: "산소 호흡기", jawaban: "alat bantu pernapasan oksigen" },
+{ soal: "유해", jawaban: "berbahaya" },
+{ soal: "숨을 쉬다", jawaban: "bernapas" },
+{ soal: "유출", jawaban: "kebocoran / arus keluar" },
+{ soal: "비상 탈출용 호흡기", jawaban: "respirator darurat" },
+{ soal: "인화성", jawaban: "mudah terbakar" },
+{ soal: "구명 부이", jawaban: "pelampung" },
+{ soal: "산화성", jawaban: "pengoksidasi" },
+{ soal: "구명 조끼", jawaban: "rompi pelampung" },
+{ soal: "점화원", jawaban: "sumber pengapian" },
+{ soal: "빠지다", jawaban: "terjatuh" },
+{ soal: "삐다", jawaban: "keseleo" }
+];
+
+// Acak soal
+questions = questions.sort(() => Math.random() - 0.5);
+
+let index = 0;
+let score = 0;
+let userAnswers = [];
+
+const questionEl = document.getElementById("question");
+const answerInput = document.getElementById("answerInput");
+const nextBtn = document.getElementById("nextBtn");
+const card = document.querySelector(".card");
+
+function showQuestion() {
+  questionEl.textContent = "Soal " + (index + 1) + ": " + questions[index].soal;
+  answerInput.value = "";
+  answerInput.focus();
+}
+
+nextBtn.addEventListener("click", () => {
+  const userAnswer = answerInput.value.trim().toLowerCase();
+  userAnswers[index] = userAnswer; // simpan jawaban sesuai index
+
+  if (userAnswer === questions[index].jawaban) {
+    score++;
+  }
+
+  index++;
+  if (index < questions.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+});
+
+function showResult() {
+  let answerList = "";
+  questions.forEach((q, i) => {
+    if (userAnswers[i] === q.jawaban) {
+      answerList += `<li>${q.soal} = <span class="correct">${q.jawaban}</span></li>`;
+    } else {
+      answerList += `<li>${q.soal} = <span class="correct">${q.jawaban}</span><br>
+                     Jawaban kamu: <span class="wrong">${userAnswers[i] || "(kosong)"}</span></li>`;
+    }
+  });
+
+  card.innerHTML = `
+    <h2>Hasil</h2>
+    <p class="result">Nilai: ${score} / ${questions.length}</p>
+    <hr>
+    <p>Kunci Jawaban:</p>
+    <ol>${answerList}</ol>
+  `;
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>
+    
+  </body>
+  
+</html>
